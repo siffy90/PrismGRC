@@ -1,13 +1,22 @@
+// vercel.json
 {
   "version": 2,
-  "routes": [
+  "projects": [
     {
-      "src": "/api/(.*)",
-      "dest": "backend/app.py"
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" },
+      "buildCommand": "npm install && npm run build"
     },
     {
-      "src": "/(.*)",
-      "dest": "frontend/dist/$1"
+      "src": "backend/app.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "50mb" },
+      "buildCommand": "pip install -r backend/requirements.txt"
     }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "backend/app.py" },
+    { "src": "/(.*)",       "dest": "frontend/dist/$1" }
   ]
 }
